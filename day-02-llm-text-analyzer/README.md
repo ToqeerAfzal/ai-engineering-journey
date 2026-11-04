@@ -57,9 +57,9 @@ day-02-llm-text-analyzer/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/ToqeerAfzal/day-02-llm-text-analyzer.git
+git clone https://github.com/ToqeerAfzal/ai-engineering-journey.git
 
-cd day-02-llm-text-analyzer
+cd ai-engineering-journey/day-02-llm-text-analyzer
 ```
 
 ### 2. Install dependencies

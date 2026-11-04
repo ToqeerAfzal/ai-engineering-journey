@@ -4,7 +4,6 @@
   "description": "A TypeScript CLI application for AI-powered text analysis using the Groq API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx src/index.ts"
   },
   "keywords": [],

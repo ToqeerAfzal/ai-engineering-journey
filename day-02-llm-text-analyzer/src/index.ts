@@ -58,7 +58,7 @@ async function analyzeText(text: string) {
 }
 
 async function main() {
-  const input = process.argv.slice(2).join(" ");
+  const input = process.argv.slice(2).join(" ").trim();
 
   if (!input.trim()) {
     console.log('Usage: npm run dev -- "Your text here"');
