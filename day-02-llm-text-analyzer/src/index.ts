@@ -31,7 +31,7 @@ async function analyzeText(
 
   const completion = await groq.chat.completions.create({
     model: process.env.GROQ_MODEL!,
-    temperature: 0.2,
+    temperature: 0.8,
     messages: [
       {
         role: "system",
@@ -65,6 +65,7 @@ async function main() {
   console.log(fewShotResult);
 }
 
-main().catch(() => {
+main().catch((error) => {
+  console.error("Application failed:", error);
   process.exitCode = 1;
 });

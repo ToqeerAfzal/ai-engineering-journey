@@ -43,6 +43,7 @@ day-02-llm-text-analyzer/
 │
 ├── src/
 │   └── index.ts
+│   └── prompts.ts
 │
 ├── .env
 ├── .gitignore
@@ -144,13 +145,13 @@ Built as part of my practical journey into Applied AI Engineering.
 
 ### Experiments
 
-| Experiment | What I observed |
+| Experiment | Observation |
 |---|---|
-| Zero-shot prompting | The answers are stright but something lenghty |
-| Few-shot prompting | Answer is conscise but requires best exxamples |
-| Temperature 0.2 | Not too creative but fills the purpose |
-| Temperature 0.8 | A lot of creativity, really nice spreading of words |
-| Prompt injection | This is really helpful rather than doing one thing again and again |
+| Zero-shot | Output was more direct but sometimes longer. |
+| Few-shot | Output followed the example format more consistently. |
+| Temperature 0.2 | Responses were more consistent and less varied. |
+| Temperature 0.8 | Responses showed more variation in wording and creativity. |
+| Prompt injection | [State whether the model followed or ignored the embedded instruction.] |
 
 ### Key Learnings
 
