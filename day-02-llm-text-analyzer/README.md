@@ -130,3 +130,32 @@ This project is part of my six-month Applied AI Engineering roadmap.
 ---
 
 Built as part of my practical journey into Applied AI Engineering.
+
+
+## Day 3: Prompt Engineering
+
+### What I implemented
+
+- Created reusable zero-shot and few-shot prompt templates.
+- Added prompt selection to the text analyzer.
+- Compared outputs from both prompting approaches.
+- Experimented with different temperature values.
+- Tested a prompt-injection example.
+
+### Experiments
+
+| Experiment | What I observed |
+|---|---|
+| Zero-shot prompting | [Your observation] |
+| Few-shot prompting | [Your observation] |
+| Temperature 0.2 | [Your observation] |
+| Temperature 0.8 | [Your observation] |
+| Prompt injection | [Your observation] |
+
+### Key Learnings
+
+- System prompts define the model's intended behavior.
+- Few-shot examples demonstrate the expected output.
+- Temperature affects output variation.
+- Prompt injection is a security concern.
+- Prompt quality should be evaluated through experiments.

@@ -2,6 +2,11 @@
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
 
+import {
+  ZERO_SHOT_PROMPT,
+  FEW_SHOT_PROMPT,
+} from "./prompts.js";
+
 dotenv.config();
 
 const apiKey = process.env.GROQ_API_KEY;
@@ -13,66 +18,50 @@ if (!apiKey || !model) {
 
 const groq = new Groq({ apiKey });
 
-async function analyzeText(text: string) {
-  try {
-    const completion = await groq.chat.completions.create({
-      model,
-      messages: [
-        {
-          role: "system",
-          content: `
-            You are a professional text analyzer.
+type PromptType = "zero-shot" | "few-shot";
 
-            Analyze the user's text and provide:
-            1. A short summary
-            2. Sentiment (Positive, Negative, or Neutral)
-            3. Main topics
-            4. Key insights
+async function analyzeText(
+  text: string,
+  promptType: PromptType = "zero-shot"
+) {
+  const systemPrompt =
+    promptType === "few-shot"
+      ? FEW_SHOT_PROMPT
+      : ZERO_SHOT_PROMPT;
 
-            Keep the response clear and structured.
-          `,
-        },
-        {
-          role: "user",
-          content: text,
-        },
-      ],
-      temperature: 0.3,
-    });
+  const completion = await groq.chat.completions.create({
+    model: process.env.GROQ_MODEL!,
+    temperature: 0.2,
+    messages: [
+      {
+        role: "system",
+        content: systemPrompt,
+      },
+      {
+        role: "user",
+        content: `Analyze the following text:\n\n${text}`,
+      },
+    ],
+  });
 
-    const result = completion.choices[0]?.message?.content;
-
-    if (!result) {
-      throw new Error("The model returned an empty response.");
-    }
-
-    return {
-      result,
-      model: completion.model,
-      usage: completion.usage,
-    };
-  } catch (error) {
-    console.error("AI analysis failed:", error);
-    throw error;
-  }
+  return completion.choices[0]?.message?.content ?? "";
 }
 
 async function main() {
-  const input = process.argv.slice(2).join(" ").trim();
+  const sampleText = `
+  The new project management application is excellent.
+  It is easy to use, helps our team communicate,
+  and has improved our productivity.
+  `;
 
-  if (!input.trim()) {
-    console.log('Usage: npm run dev -- "Your text here"');
-    return;
-  }
+  const zeroShotResult = await analyzeText(sampleText, "zero-shot");
+  const fewShotResult = await analyzeText(sampleText, "few-shot");
 
-  const analysis = await analyzeText(input);
+  console.log("\n--- ZERO-SHOT RESULT ---");
+  console.log(zeroShotResult);
 
-  console.log("\n========== TEXT ANALYSIS ==========\n");
-  console.log(analysis.result);
-
-  console.log("\n========== MODEL INFORMATION ==========\n");
-  console.log("Model:", analysis.model);
-  console.log("Token usage:", analysis.usage);
+  console.log("\n--- FEW-SHOT RESULT ---");
+  console.log(fewShotResult);
 }
 
 main().catch(() => {
