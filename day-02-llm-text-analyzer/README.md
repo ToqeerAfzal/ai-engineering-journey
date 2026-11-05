@@ -151,7 +151,7 @@ Built as part of my practical journey into Applied AI Engineering.
 | Few-shot | Output followed the example format more consistently. |
 | Temperature 0.2 | Responses were more consistent and less varied. |
 | Temperature 0.8 | Responses showed more variation in wording and creativity. |
-| Prompt injection | [State whether the model followed or ignored the embedded instruction.] |
+| Prompt injection | Yes the model followed the instructions properly |
 
 ### Key Learnings
 
