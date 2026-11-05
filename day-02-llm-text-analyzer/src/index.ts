@@ -48,14 +48,15 @@ async function analyzeText(
 }
 
 async function main() {
-  const sampleText = `
-  The new project management application is excellent.
-  It is easy to use, helps our team communicate,
-  and has improved our productivity.
-  `;
+  const input = process.argv.slice(2).join(" ").trim();
 
-  const zeroShotResult = await analyzeText(sampleText, "zero-shot");
-  const fewShotResult = await analyzeText(sampleText, "few-shot");
+  if (!input.trim()) {
+    console.log('Usage: npm run dev -- "Your text here"');
+    return;
+  }
+
+  const zeroShotResult = await analyzeText(input, "zero-shot");
+  const fewShotResult = await analyzeText(input, "few-shot");
 
   console.log("\n--- ZERO-SHOT RESULT ---");
   console.log(zeroShotResult);
