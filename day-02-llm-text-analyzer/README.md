@@ -146,11 +146,11 @@ Built as part of my practical journey into Applied AI Engineering.
 
 | Experiment | What I observed |
 |---|---|
-| Zero-shot prompting | [Your observation] |
-| Few-shot prompting | [Your observation] |
-| Temperature 0.2 | [Your observation] |
-| Temperature 0.8 | [Your observation] |
-| Prompt injection | [Your observation] |
+| Zero-shot prompting | The answers are stright but something lenghty |
+| Few-shot prompting | Answer is conscise but requires best exxamples |
+| Temperature 0.2 | Not too creative but fills the purpose |
+| Temperature 0.8 | A lot of creativity, really nice spreading of words |
+| Prompt injection | This is really helpful rather than doing one thing again and again |
 
 ### Key Learnings
 
