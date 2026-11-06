@@ -35,7 +35,7 @@ async function analyzeText(
       : ZERO_SHOT_PROMPT;
 
   const completion = await groq.chat.completions.create({
-    model: process.env.GROQ_MODEL!,
+    model: model!,
     temperature: 0.8,
     messages: [
       {
