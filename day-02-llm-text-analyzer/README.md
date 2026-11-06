@@ -1,9 +1,10 @@
-
 # AI Text Analyzer
 
 A TypeScript and Node.js application that uses Large Language Models (LLMs) through the Groq API to analyze text and generate meaningful insights.
 
-This project is part of my Applied AI Engineering learning journey, focused on building practical AI-powered applications using modern backend technologies.
+This project is part of my **Applied AI Engineering learning journey**, where I build practical AI-powered applications and explore the engineering concepts behind reliable LLM integrations.
+
+The application demonstrates prompt engineering, LLM API integration, structured outputs, and runtime validation of AI-generated responses.
 
 ## Features
 
@@ -11,30 +12,52 @@ This project is part of my Applied AI Engineering learning journey, focused on b
 - Sentiment analysis
 - Main topic identification
 - Key insights extraction
-- LLM response handling
-- Model and token usage information
+- Zero-shot and few-shot prompt engineering
+- Configurable prompt strategies
+- LLM structured JSON responses
+- JSON parsing and validation using Zod
+- Groq API integration
 - Environment-based API configuration
-- Error handling for API requests
+- Error handling for API requests and invalid responses
 
 ## Tech Stack
 
-- Node.js
-- TypeScript
-- Groq API
-- Groq TypeScript SDK
-- dotenv
-- tsx
+- **Runtime:** Node.js
+- **Language:** TypeScript
+- **LLM Provider:** Groq API
+- **LLM SDK:** Groq TypeScript SDK
+- **Validation:** Zod
+- **Environment Configuration:** dotenv
+- **Development Runner:** tsx
 
 ## How It Works
 
-The application accepts text through the command line and sends it to an LLM using the Groq chat completion API.
+The application accepts text through the command line and sends it to an LLM using the Groq Chat Completions API.
 
-The model receives two messages:
+It uses three analysis approaches:
 
-1. **System message:** Defines the AI's role and analysis instructions.
-2. **User message:** Contains the text that needs to be analyzed.
+### 1. Zero-Shot Prompting
 
-The application processes the model response and displays the analysis along with model and token usage information.
+The model receives instructions without any examples. It uses those instructions to analyze the supplied text.
+
+### 2. Few-Shot Prompting
+
+The model receives instructions along with examples demonstrating the expected analysis format.
+
+This helps evaluate how examples influence the consistency and structure of model responses.
+
+### 3. Structured Output
+
+The application requests a machine-readable JSON response using Groq's JSON mode.
+
+The returned response is:
+
+1. Received from the LLM.
+2. Parsed using `JSON.parse()`.
+3. Validated against a Zod schema.
+4. Returned to the application only if it passes validation.
+
+This approach helps make AI-generated data more predictable and safer to consume in backend applications.
 
 ## Project Structure
 
@@ -42,10 +65,12 @@ The application processes the model response and displays the analysis along wit
 day-02-llm-text-analyzer/
 │
 ├── src/
-│   └── index.ts
-│   └── prompts.ts
+│   ├── index.ts
+│   ├── prompts.ts
+│   └── schema.ts
 │
 ├── .env
+├── .env.example
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
@@ -55,7 +80,7 @@ day-02-llm-text-analyzer/
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ToqeerAfzal/ai-engineering-journey.git
@@ -63,119 +88,167 @@ git clone https://github.com/ToqeerAfzal/ai-engineering-journey.git
 cd ai-engineering-journey/day-02-llm-text-analyzer
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure environment variables
+### 3. Configure Environment Variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the project root:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
 GROQ_MODEL=your_supported_groq_model
 ```
 
-Replace the placeholder values with your own credentials and a model currently available to your Groq account.
+You can obtain your API key from the [Groq Console](https://console.groq.com/).
 
-**Never commit your `.env` file or expose your API key.**
+Replace the placeholder values with your API key and a model currently supported by your Groq account.
 
-### 4. Run the application
+**Security note:** Never commit your `.env` file or expose your API key. The repository includes an `.env.example` file for configuration reference.
+
+### 4. Run the Application
 
 ```bash
 npm run dev -- "AI is transforming software development."
 ```
 
-## Example Output
+You can also provide different text:
 
-The application returns:
+```bash
+npm run dev -- "Customer satisfaction has improved because our application is faster and easier to use."
+```
 
-- Summary
-- Sentiment
-- Main topics
-- Key insights
-- Model information
-- Token usage
+## Example Structured Output
 
-Actual analysis is generated dynamically by the selected LLM.
+The structured analysis returns a JSON object similar to this:
 
-## What I Learned
+```json
+{
+  "summary": "The text discusses how AI is transforming software development.",
+  "sentiment": "positive",
+  "topics": [
+    "Artificial Intelligence",
+    "Software Development"
+  ],
+  "insights": [
+    "AI is becoming increasingly important in software engineering."
+  ]
+}
+```
 
-Through this project, I explored:
+*Note: This is an illustrative example. Actual responses are generated dynamically by the selected LLM.*
 
-- Connecting a TypeScript backend to an LLM API.
-- Understanding system and user prompts.
-- Working with chat completion APIs.
-- Processing LLM responses.
-- Managing API credentials securely using environment variables.
-- Handling asynchronous API requests and errors.
-- Understanding model information and token usage.
+## Structured Output Validation
 
-## Future Improvements
+The application uses Zod to validate the structure of AI-generated JSON responses.
 
-- Structured JSON responses using Zod.
-- Input validation.
-- Support for multiple LLM providers.
-- Streaming responses.
-- Automated tests.
-- A REST API interface.
+The `AnalysisSchema` defines the expected response:
 
-## Learning Journey
+| Field | Validation |
+|---|---|
+| `summary` | Non-empty string |
+| `sentiment` | `positive`, `negative`, or `neutral` |
+| `topics` | Array of non-empty strings, maximum 3 |
+| `insights` | Array of non-empty strings, between 1 and 3 |
 
-This project is part of my six-month Applied AI Engineering roadmap.
+The schema also rejects unexpected properties using strict object validation.
 
-**Day 02:** First LLM-powered application using TypeScript, Node.js and Groq.
+This ensures that downstream application logic receives data matching the expected structure rather than blindly trusting an LLM response.
 
----
+## Learning Progress
 
-Built as part of my practical journey into Applied AI Engineering.
+### Day 02: First LLM-Powered Application
 
+**What I implemented**
 
-## Day 3: Prompt Engineering
+- Connected a TypeScript and Node.js application to the Groq API.
+- Created an LLM-powered text analyzer.
+- Implemented text summarization and sentiment analysis.
+- Extracted topics and key insights from text.
+- Configured API credentials using environment variables.
+- Added asynchronous API request handling and error handling.
 
-### What I implemented
+**Key learnings**
+
+- Understanding LLM APIs and chat completions.
+- Working with system and user messages.
+- Integrating external AI services into a backend application.
+- Managing API credentials securely.
+- Handling asynchronous API responses.
+
+### Day 03: Prompt Engineering
+
+**What I implemented**
 
 - Created reusable zero-shot and few-shot prompt templates.
 - Added prompt selection to the text analyzer.
 - Compared outputs from both prompting approaches.
-- Experimented with different temperature values.
+- Explored the impact of different temperature settings.
 - Tested a prompt-injection example.
 
-### Experiments
+**Experiments**
 
 | Experiment | Observation |
 |---|---|
-| Zero-shot | Output was more direct but sometimes longer. |
-| Few-shot | Output followed the example format more consistently. |
-| Temperature 0.2 | Responses were more consistent and less varied. |
-| Temperature 0.8 | Responses showed more variation in wording and creativity. |
-| Prompt injection | Yes the model followed the instructions properly |
+| Zero-shot prompting | Produced direct responses without examples. |
+| Few-shot prompting | Helped the model follow the demonstrated response format more consistently. |
+| Temperature 0.2 | Produced more consistent and less varied responses. |
+| Temperature 0.8 | Produced more variation in wording and creativity. |
+| Prompt injection | Explored how malicious instructions embedded in user input can influence model behavior. |
 
-### Key Learnings
+*Note: Temperature observations are experimental findings, not a guarantee of identical behavior across models or inputs. The current standard analysis implementation uses a temperature of 0.8.*
+
+**Key learnings**
 
 - System prompts define the model's intended behavior.
-- Few-shot examples demonstrate the expected output.
-- Temperature affects output variation.
-- Prompt injection is a security concern.
-- Prompt quality should be evaluated through experiments.
+- Few-shot examples demonstrate the expected output format.
+- Temperature influences response variation.
+- Prompt injection is an important LLM security concern.
+- Prompt quality should be evaluated through practical experiments.
 
+### Day 04: Structured Outputs and Validation
 
-## Day 4: Structured Outputs and Validation
-
-### What I implemented
+**What I implemented**
 
 - Added structured JSON output to the LLM application.
-- Used Groq JSON mode.
-- Created a Zod schema for AI-generated responses.
-- Validated model output before using it.
-- Added error handling for invalid responses.
+- Used Groq JSON mode for machine-readable responses.
+- Created a Zod schema to define the expected response structure.
+- Parsed LLM-generated JSON using `JSON.parse()`.
+- Validated generated data using Zod's `safeParse()`.
+- Added error handling for empty and invalid responses.
+- Used strict schema validation to reject unexpected properties.
 
-### Key Learnings
+**Key learnings**
 
 - LLM responses should not always be treated as plain text.
 - JSON mode helps generate machine-readable responses.
 - JSON parsing converts response strings into JavaScript objects.
 - Zod validates the structure and types of AI-generated data.
-- Structured outputs make LLM integration more reliable.
+- Runtime validation is important when integrating LLMs into backend systems.
+- Structured outputs make AI integrations more predictable and reliable.
+
+## Future Improvements
+
+- Streaming LLM responses.
+- Configurable model parameters.
+- Automated unit and integration tests.
+- Stronger input validation and prompt-injection defenses.
+- Support for multiple LLM providers.
+- REST API interface.
+- Token usage and model performance tracking.
+- Logging and monitoring.
+
+## Learning Journey
+
+This project is part of my six-month **Applied AI Engineering roadmap**, focused on developing practical skills for building production-ready AI-powered applications.
+
+The objective is to combine my existing full-stack software engineering experience with deeper knowledge of LLM integration, AI application architecture, and reliable backend systems.
+
+**Repository:** [AI Engineering Journey](https://github.com/ToqeerAfzal/ai-engineering-journey)
+
+---
+
+Built as part of my practical journey into Applied AI Engineering.
