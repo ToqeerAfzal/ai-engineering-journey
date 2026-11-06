@@ -5,7 +5,12 @@ import dotenv from "dotenv";
 import {
   ZERO_SHOT_PROMPT,
   FEW_SHOT_PROMPT,
+  STRUCTURED_OUTPUT_PROMPT,
 } from "./prompts.js";
+
+import {
+  AnalysisSchema,
+} from "./schema.js";
 
 dotenv.config();
 
@@ -47,6 +52,46 @@ async function analyzeText(
   return completion.choices[0]?.message?.content ?? "";
 }
 
+async function analyzeStructuredText(text: string) {
+  const completion = await groq.chat.completions.create({
+    model: model!,
+    temperature: 0.2,
+
+    response_format: {
+      type: "json_object",
+    },
+
+    messages: [
+      {
+        role: "system",
+        content: STRUCTURED_OUTPUT_PROMPT,
+      },
+      {
+        role: "user",
+        content: `Analyze the following text:\n\n${text}`,
+      },
+    ],
+  });
+
+  const response = completion.choices[0]?.message?.content;
+
+  if (!response) {
+    throw new Error("The model returned an empty response.");
+  }
+
+  const parsedResponse = JSON.parse(response);
+
+  const validation = AnalysisSchema.safeParse(parsedResponse);
+
+  if (!validation.success) {
+    throw new Error(
+      `Invalid AI response: ${validation.error.message}`
+    );
+  }
+
+  return validation.data;
+}
+
 async function main() {
   const input = process.argv.slice(2).join(" ").trim();
 
@@ -63,6 +108,14 @@ async function main() {
 
   console.log("\n--- FEW-SHOT RESULT ---");
   console.log(fewShotResult);
+
+  const structuredResult = await analyzeStructuredText(input);
+
+  console.log("\n--- STRUCTURED JSON RESULT ---");
+
+  console.log(
+    JSON.stringify(structuredResult, null, 2)
+  );
 }
 
 main().catch((error) => {

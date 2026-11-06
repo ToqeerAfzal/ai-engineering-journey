@@ -160,3 +160,22 @@ Built as part of my practical journey into Applied AI Engineering.
 - Temperature affects output variation.
 - Prompt injection is a security concern.
 - Prompt quality should be evaluated through experiments.
+
+
+## Day 4: Structured Outputs and Validation
+
+### What I implemented
+
+- Added structured JSON output to the LLM application.
+- Used Groq JSON mode.
+- Created a Zod schema for AI-generated responses.
+- Validated model output before using it.
+- Added error handling for invalid responses.
+
+### Key Learnings
+
+- LLM responses should not always be treated as plain text.
+- JSON mode helps generate machine-readable responses.
+- JSON parsing converts response strings into JavaScript objects.
+- Zod validates the structure and types of AI-generated data.
+- Structured outputs make LLM integration more reliable.
